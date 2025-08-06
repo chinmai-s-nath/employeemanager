@@ -1,0 +1,14 @@
+0001$Alice$ Smith$9876574307$alice.smith@example.com$2016-02-07$false
+0002$Bob$ Johnson$9876531550$bob.johnson@example.com$2021-06-14$true
+0003$Charlie$ Williams$9876582406$charlie.williams@example.com$2019-02-21$false
+0004$Diana$ Brown$9876595830$diana.brown@example.com$2020-04-24$false
+0005$Ethan$ Jones$9876561891$ethan.jones@example.com$2018-03-23$true
+0006$Fiona$ Miller$9876516480$fiona.miller@example.com$2021-08-12$true
+0007$George$ Davis$9876522435$george.davis@example.com$2017-10-27$false
+0008$Hannah$ Garcia$9876594833$hannah.garcia@example.com$2015-09-26$true
+0009$Ian$ Rodriguez$9876518307$ian.rodriguez@example.com$2018-02-06$false
+0010$Julia$ Wilson$9876572808$julia.wilson@example.com$2017-07-12$true
+0011$Kevin$ Martinez$9876565993$kevin.martinez@example.com$2015-05-06$false
+0012$Laura$ Anderson$9876521239$laura.anderson@example.com$2017-12-22$false
+0013$Michael$ Taylor$9876545057$michael.taylor@example.com$2018-07-18$false
+0014$Nina$ Thomas$9876560011$nina.thomas@example.com$2015-11-03$false
