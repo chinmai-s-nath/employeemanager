@@ -5,25 +5,58 @@ import com.litmus7.employeemanager.dao.*;
 import java.util.*;
 
 public class services {
-	EmployeeDAO employeeDAO=new EmployeeDAO();
+	private EmployeeDAO employeeDAO=new EmployeeDAO();
 	public boolean createEmployeeServices(Employeedto employeeController) {
-		boolean result=employeeDAO.createEmployee(employeeController);
-		return  result;
+		try {
+			boolean result=employeeDAO.createEmployee(employeeController);
+			return  result;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public List<String>getAllEmployeeServices(){
-		return employeeDAO.getAllEmployee();
+		try {
+			return employeeDAO.getAllEmployee();
+		} catch (Exception e) {
+		
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		
 	}
 	public Employeedto getEmployeeByIdServices(int employeeId) {
-		return employeeDAO.getEmployeeById(employeeId);
+		try {
+			return employeeDAO.getEmployeeById(employeeId);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public int deleteEmployeeServices(int employeeId) {
-		return employeeDAO.deleteEmployee(employeeId);
+		try {
+			return employeeDAO.deleteEmployee(employeeId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	public boolean updateEmployeeServices(Employeedto emp) {
-		return employeeDAO.updateEmployee(emp);
+		try {
+			return employeeDAO.updateEmployee(emp);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

@@ -2,21 +2,33 @@ package com.litmus7.employeemanager.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
+import java.io.FileInputStream;
 
 public class ConnectionUtil {
+    
+    private static Properties properties = new Properties();
 
-	static String dburl="jdbc:mysql://localhost:3306/empdb";
-	static String user="root";
-	static String pass="root";
-	
-	public Connection ConnectionCreate() {
-		Connection connection=null;
-		try {
-		connection=DriverManager.getConnection(dburl,user,pass);		
-		}
-		catch(Exception e) {
-			e.getStackTrace();
-		}
-		return connection;
-	}
+    // Load properties only once
+    static {
+        try {
+            properties.load(new FileInputStream("jdbc.properties"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection ConnectionCreate() {
+        Connection connection = null;
+        try {
+            String thedburl = properties.getProperty("dburl");
+            String theuser = properties.getProperty("user");
+            String thepass = properties.getProperty("password");
+            connection = DriverManager.getConnection(thedburl, theuser, thepass);        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
 }
+

@@ -1,18 +1,22 @@
 package com.litmus7.employeemanager.controller;
 
+import com.litmus7.employeemanager.constants.sqlConstants;
 import com.litmus7.employeemanager.dto.Employeedto;
 import com.litmus7.employeemanager.util.Response;
+import com.litmus7.employeemanager.util.Validation;
 import com.litmus7.employeemanager.util.textUtil;
 import com.litmus7.employeemanager.services.*;
 import java.util.*;
 
 public class EmployeeController {
+	private Response response=new Response();
+	private textUtil util=new textUtil();
+	private Validation valid=new Validation();
 	
-	Response response=new Response();
 	
 	private String INPUT_FILE;
 	private String OUTPUT_FILE;
-	services Services=new services();
+	private services Services=new services();
 	
 	public EmployeeController(String INPUT_FILE, String OUTPUT_FILE){
 		this.INPUT_FILE=INPUT_FILE;
@@ -38,35 +42,69 @@ public class EmployeeController {
 	//Phase 3
 	
 	public String writeInputToCSV(Employeedto employeeDataTransfer) {
+		if (valid.checkStringEmpty(employeeDataTransfer.fname)==true && valid.checkStringEmpty(employeeDataTransfer.phone)==true && valid.checkStringEmpty(employeeDataTransfer.email)==true  &&valid.checkEmail(employeeDataTransfer.email)==true && valid.checkPhoneNumber(employeeDataTransfer.phone)==true )
+		{
+		String details=employeeDataTransfer.employeeId+","+employeeDataTransfer.fname+","+employeeDataTransfer.lname+","+employeeDataTransfer.phone+","+employeeDataTransfer.email+","+employeeDataTransfer.doj+",true";
 		
-		textUtil util=new textUtil();
-		String details=employeeDataTransfer.id+","+employeeDataTransfer.fname+","+employeeDataTransfer.lname+","+employeeDataTransfer.phone+","+employeeDataTransfer.email+","+employeeDataTransfer.doj+",true";
 		return (util.writeFile(OUTPUT_FILE,details,true));
-		
+		}
+		else {
+			return response.dataMismatch();
+		}
 	}
 	
 	public String createEmployeeController(Employeedto employeeDataTransfer) { 
-
-		boolean result=Services.createEmployeeServices(employeeDataTransfer);
-		return response.booleanResponse(result);
 		
+		if (valid.checkStringEmpty(employeeDataTransfer.fname)==true && valid.checkStringEmpty(employeeDataTransfer.phone)==true && valid.checkStringEmpty(employeeDataTransfer.email)==true  &&valid.checkEmail(employeeDataTransfer.email)==true && valid.checkPhoneNumber(employeeDataTransfer.phone)==true )
+		{
+			boolean result=Services.createEmployeeServices(employeeDataTransfer);
+			return response.sqlBooleanResponse(result);
+		}
+		
+		else {
+			
+			return response.dataMismatch();
+		}
 	}
 	
 	public List<String> getAllEmployeeController(){
+		List<String>result=new ArrayList<>();
 		
-		return Services.getAllEmployeeServices();
+		if (Services.getAllEmployeeServices()!=null) {
+			return Services.getAllEmployeeServices();
+		}
+		else {
+			 result.add("No item found");
+		}
+		
+		return result;
 	}
 	
-	public Employeedto getEmployeeByIdController(int employeeId) {
+	public String getEmployeeByIdController(int employeeId) {
 		
-		return Services.getEmployeeByIdServices(employeeId);
+		Employeedto employeeDTO= Services.getEmployeeByIdServices(employeeId);
+		if (employeeDTO!=null) {
+			return employeeDTO.EmployeeDTODisplay();
+		}
+		else {
+			return sqlConstants.itemNotFound();
+		}
+		
 	}
 	public String deleteEmployeeController(int employeeId) {
 	
-		return response.intResponse(Services.deleteEmployeeServices(employeeId));
+		try {
+			return response.intResponse(Services.deleteEmployeeServices(employeeId));
+		} catch (Exception e) {
+			return sqlConstants.itemNotFound();
+		}
 	}
 	
 	public String updateEmployeeController(Employeedto employee) {
-		return response.booleanResponse(Services.updateEmployeeServices(employee));
+		try {
+			return response.booleanResponse(Services.updateEmployeeServices(employee));
+		} catch (Exception e) {
+			return sqlConstants.errorCode();
+		}
 	}
 }

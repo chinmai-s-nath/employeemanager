@@ -1,7 +1,7 @@
 package com.litmus7.employeemanager.app;
 
-import com.litmus7.employeemanager.dto.*;
 import com.litmus7.employeemanager.controller.*;
+import com.litmus7.employeemanager.dto.Employeedto;
 import com.litmus7.employeemanager.util.*;
 import java.util.Scanner;
 import java.util.*;
@@ -10,20 +10,19 @@ public class EmployeeManagerApp {
 	
 	private static final String INPUT_FILE ="E:\\Eclipse workspace\\employeemanager\\employees.txt";
 	private static final String OUTPUT_FILE="employee.csv";
-
 	public static void main(String[] args) {
 		
-		EmployeeController employeeController=new EmployeeController(INPUT_FILE, OUTPUT_FILE);
-		Validation valid = new Validation();
-	
-		String employeeId;
+	    EmployeeController employeeController=new EmployeeController(INPUT_FILE, OUTPUT_FILE);
+	    Validation valid = new Validation();
+		Employeedto employeeDTO=null;
+		
 		String firstName;
 		String lastName;
 		String phoneNumber;
 		String emailAddress;
 		String dateOfJoining;
 		int active;
-		int eid;
+		int employeeID;
 		String data="";
 	
 		int choice;
@@ -46,40 +45,38 @@ public class EmployeeManagerApp {
 				//method
 				break;
 			case 3:
-				Employeedto dto;
+				
 				
 				System.out.println("Enter employee details: ");
 				
 				System.out.println("Employee id: ");
-				int id=sc.nextInt();
+				employeeID=sc.nextInt();
 				
 				System.out.println("First name: ");
-				String fname=sc.next();
+				firstName=sc.next();
 				
 				System.out.println("Last name: ");
-				String lname=sc.next();
+				lastName=sc.next();
 				
 				System.out.println("Phone number: ");
-				String phone=sc.next();
+				phoneNumber=sc.next();
 				
 				System.out.println("Email id: ");
-				String email=sc.next();
+				emailAddress=sc.next();
 				
 				System.out.println("Date of Joining(YYYY-MM-DD): ");
-				String doj=sc.next();
+				dateOfJoining=sc.next();
 				
 				System.out.println("Active (true/false): ");
-				int active1=sc.nextInt();
+				active=sc.nextInt();
 				
-				if (valid.checkStringEmpty(fname)==true && valid.checkStringEmpty(phone)==true && valid.checkStringEmpty(email)==true  &&valid.checkEmail(email)==true && valid.checkPhoneNumber(phone)==true)
+				if (valid.checkStringEmpty(firstName)==true && valid.checkStringEmpty(phoneNumber)==true && valid.checkStringEmpty(emailAddress)==true  &&valid.checkEmail(emailAddress)==true && valid.checkPhoneNumber(phoneNumber)==true)
 				{
-					dto=new Employeedto(id,fname,lname,phone,email,doj,active1);
-					String out=employeeController.writeInputToCSV(dto);
+					employeeDTO=new Employeedto(employeeID,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
+					String out=employeeController.writeInputToCSV(employeeDTO);
 					System.out.println(out);
 				}
-				
-				
-			
+				 
 				else {
 					System.out.println("Enter a valid data\n");
 				}
@@ -89,7 +86,7 @@ public class EmployeeManagerApp {
 				System.out.println("Enter employee details: ");
 				
 				System.out.println("Employee id: ");
-				id=sc.nextInt();
+				employeeID=sc.nextInt();
 				
 				System.out.println("First name: ");
 				firstName=sc.next();
@@ -109,24 +106,27 @@ public class EmployeeManagerApp {
 				System.out.println("Active (1/0): ");
 				 active=sc.nextInt();
 				
-				if (valid.checkStringEmpty(firstName)==true && valid.checkStringEmpty(phoneNumber)==true && valid.checkStringEmpty(emailAddress)==true  &&valid.checkEmail(emailAddress)==true && valid.checkPhoneNumber(phoneNumber)==true)
-				{
-					dto=new Employeedto(id,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
-					
-					data=employeeController.createEmployeeController(dto);
-				}
-			
-				else {
-					System.out.println("Enter a valid data\n");
-				}
+//				if (valid.checkStringEmpty(firstName)==true && valid.checkStringEmpty(phoneNumber)==true && valid.checkStringEmpty(emailAddress)==true  &&valid.checkEmail(emailAddress)==true && valid.checkPhoneNumber(phoneNumber)==true)
+//				{
+//					employeeDTO=new Employeedto(id,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
+//					data=employeeController.createEmployeeController(employeeDTO);
+//				}
+//			
+//				else {
+//					System.out.println("Enter a valid data\n");
+//				}
+				 
+				employeeDTO=new Employeedto(employeeID,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
+				data=employeeController.createEmployeeController(employeeDTO);
+				
 				System.out.println(data);
 				break;
 			case 5:
 				//employeeController.getAllEmployeeController();
 				List<String> employees = employeeController.getAllEmployeeController();
 
-				for (String emp : employees) {
-				    System.out.println(emp);
+				for (String employee : employees) {
+				    System.out.println(employee);
 				}
 				System.out.println();
 				break;
@@ -134,22 +134,26 @@ public class EmployeeManagerApp {
 			case 6:
 				System.out.println("Enter id to search: ");
 				int cho=sc.nextInt();
-				Employeedto dto1=employeeController.getEmployeeByIdController(cho);
-				
-				System.out.println("The data of id "+cho+" is\n");
-				System.out.println(dto1.id+" , "+dto1.fname+" , "+dto1.lname+" , "+dto1.phone+" , "+dto1.email+" , "+dto1.doj+" , "+dto1.active);
-				System.out.println();
+				data=employeeController.getEmployeeByIdController(cho);
+//				if(employeeController.getEmployeeByIdController(cho)!=null) {
+//					System.out.println(employeeDTO.employeeId+" , "+employeeDTO.fname+" , "+employeeDTO.lname+" , "+employeeDTO.phone+" , "+employeeDTO.email+" , "+employeeDTO.doj+" , "+employeeDTO.active);
+//					System.out.println();
+//				}
+//				else {
+//					System.out.println("No item found");
+//				}
+				System.out.println(data);
 				break;
 			case 7:
 				System.out.println("Enter id to search: ");
-				eid=sc.nextInt();
-				data=employeeController.deleteEmployeeController(eid);
-				System.out.println("Number of rows affected: "+data);
+				employeeID=sc.nextInt();
+				data=employeeController.deleteEmployeeController(employeeID);
+				System.out.println(data);
 				break;
  			case 8:
  			
 				System.out.println("Enter Employee id to update information: ");
-				eid=sc.nextInt();
+				employeeID=sc.nextInt();
 				
 				System.out.println("New First name: ");
 				firstName=sc.next();
@@ -171,9 +175,9 @@ public class EmployeeManagerApp {
 				
 				if (valid.checkStringEmpty(firstName)==true && valid.checkStringEmpty(phoneNumber)==true && valid.checkStringEmpty(emailAddress)==true  &&valid.checkEmail(emailAddress)==true && valid.checkPhoneNumber(phoneNumber)==true)
 				{
-					dto=new Employeedto(eid,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
+					employeeDTO=new Employeedto(employeeID,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
 					
-					data=employeeController.updateEmployeeController(dto);
+					data=employeeController.updateEmployeeController(employeeDTO);
 					System.out.println(data);
 				} 
 			
