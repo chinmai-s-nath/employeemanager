@@ -125,6 +125,9 @@ public class EmployeeManagerApp {
 					    System.out.println(employee);
 					}
 				}
+				else {
+					System.out.println("Error: " + response.getMessage());
+				}
 				System.out.println();
 				break;
 

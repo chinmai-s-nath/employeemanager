@@ -8,6 +8,8 @@ import com.litmus7.employeemanager.util.Validation;
 import com.litmus7.employeemanager.util.textUtil;
 import com.litmus7.employeemanager.services.*;
 import com.litmus7.employeemanager.exception.*;
+
+import java.sql.SQLException;
 import java.util.*;
 
 public class EmployeeController {
@@ -101,7 +103,10 @@ public class EmployeeController {
 		
 		try {
 			 Employeedto employee = Services.getEmployeeByIdServices(employeeId);
-			 return new ResponseDTO(true, "Employee found", employee,null);
+			 if (employee!=null)
+				 	return new ResponseDTO(true, "Employee found", employee,null);
+			 else
+				 throw new EmployeeNotFoundException("Employee with id "+employeeId+" Not found");
 			 } 
 		catch (EmployeeNotFoundException e) {
 			 return new ResponseDTO(false, e.getMessage(), null,null);
@@ -118,8 +123,16 @@ public class EmployeeController {
 	
 		try {
 			 int data =Services.deleteEmployeeServices(employeeId);
+			 if (data>0) {
 			 return new ResponseDTO(true, "Employees deleted: "+data, null,null);
 			 } 
+			 else {
+				 throw new EmployeeNotFoundException("No rows deleted");
+			 }
+		} 
+		catch (EmployeeDatabaseException e) {
+			return new ResponseDTO(false, e.getMessage(), null,null);
+		}
 		catch (EmployeeNotFoundException e) {
 			 return new ResponseDTO(false, e.getMessage(), null,null);
 			 } 
@@ -134,8 +147,13 @@ public class EmployeeController {
 	public ResponseDTO updateEmployeeController(Employeedto employee) {
 		try {
 			 boolean data =Services.updateEmployeeServices(employee);
+			 if (data==true) {
 			 return new ResponseDTO(data, "Employee details updated of id: "+employee.employeeId, null,null);
 			 } 
+			 else {
+				 throw new EmployeeNotFoundException("No data updated found");
+			 }
+		}
 		catch (EmployeeNotFoundException e) {
 			 return new ResponseDTO(false, e.getMessage(), null,null);
 			 } 
