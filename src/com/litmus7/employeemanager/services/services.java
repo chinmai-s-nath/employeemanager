@@ -2,61 +2,55 @@ package com.litmus7.employeemanager.services;
 
 import com.litmus7.employeemanager.dto.Employeedto;
 import com.litmus7.employeemanager.dao.*;
+import com.litmus7.employeemanager.exception.*;
 import java.util.*;
+
 
 public class services {
 	private EmployeeDAO employeeDAO=new EmployeeDAO();
-	public boolean createEmployeeServices(Employeedto employeeController) {
+	public boolean createEmployeeServices(Employeedto employeeController) throws EmployeeServiceException,	EmployeeNotCreated {
 		try {
-			boolean result=employeeDAO.createEmployee(employeeController);
-			return  result;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
+			 boolean result=employeeDAO.createEmployee(employeeController);
+			 return result;
+		}
+			catch (EmployeeDaoException e) {
+				 throw new EmployeeServiceException("Service layer failed to fetch employee.",e);
 		}
 	}
 
-	public List<String>getAllEmployeeServices(){
+	public List<String>getAllEmployeeServices()throws EmployeeServiceException,	EmployeeNotFoundException{
 		try {
 			return employeeDAO.getAllEmployee();
-		} catch (Exception e) {
-		
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
+		catch (EmployeeDaoException e) {
+				 throw new EmployeeServiceException("Service layer failed to fetch employee.",e);
+				 }
 		
 	}
-	public Employeedto getEmployeeByIdServices(int employeeId) {
+	public Employeedto getEmployeeByIdServices(int employeeId)throws EmployeeServiceException,	EmployeeNotFoundException { 
 		try {
 			return employeeDAO.getEmployeeById(employeeId);
 		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		catch (EmployeeDaoException e) {
+			 throw new EmployeeServiceException("Service layer failed to fetch employee.",e);
+			 }
 	}
 
-	public int deleteEmployeeServices(int employeeId) {
+	public int deleteEmployeeServices(int employeeId) throws EmployeeServiceException,	EmployeeNotFoundException{
 		try {
 			return employeeDAO.deleteEmployee(employeeId);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return 0;
+		}catch (EmployeeDaoException e) {
+			 throw new EmployeeServiceException("Service layer failed to fetch employee.",e);
+			 }
 		}
-	}
+
 	
-	public boolean updateEmployeeServices(Employeedto emp) {
+	public boolean updateEmployeeServices(Employeedto emp) throws EmployeeServiceException,	EmployeeNotFoundException{
 		try {
 			return employeeDAO.updateEmployee(emp);
 		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
+		catch (EmployeeDaoException e) {
+			 throw new EmployeeServiceException("Service layer failed to fetch employee.",e);
 		}
 	}
 }

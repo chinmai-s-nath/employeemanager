@@ -7,10 +7,11 @@ import java.sql.SQLException;
 import com.litmus7.employeemanager.dto.*;
 import com.litmus7.employeemanager.util.*;
 import com.litmus7.employeemanager.constants.*;
+import com.litmus7.employeemanager.exception.*;
 
 public class EmployeeDAO {
 	ConnectionUtil  connection=new ConnectionUtil();
-	public boolean createEmployee(Employeedto employeeController) {	
+	public boolean createEmployee(Employeedto employeeController)throws EmployeeDaoException,	EmployeeNotCreated {	
 		Connection dbconnect=ConnectionUtil.ConnectionCreate();
 		PreparedStatement preparedstatement=null;
 		try {
@@ -25,10 +26,8 @@ public class EmployeeDAO {
 			preparedstatement.execute();
 			return true;
 		}
-		catch (SQLException sqlExcept) {
-			return false;
-		}catch (Exception e){
-			return false;
+		catch (SQLException sqlException) {
+			throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
 		}
 		
 		finally {
@@ -41,7 +40,7 @@ public class EmployeeDAO {
 		}
 	}
 	
-	public List<String> getAllEmployee() {
+	public List<String> getAllEmployee() throws EmployeeDaoException,	EmployeeNotFoundException{
 		Connection dbconnect=ConnectionUtil.ConnectionCreate();
 		ResultSet resultSet=null;
 		Statement queryStatement=null;
@@ -59,10 +58,10 @@ public class EmployeeDAO {
 	                         resultSet.getBoolean("active_status");
 	            result.add(row);
 	        }
-			//resultSet.close();
-		}catch (Exception exc) {
-			exc.printStackTrace();
 		}
+			catch(SQLException sqlException) {
+				throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
+			}
 		finally {
 			try {
 				queryStatement.close();
@@ -75,14 +74,14 @@ public class EmployeeDAO {
 		return result;
 	}
 	
-	public Employeedto getEmployeeById(int empId){
+	public Employeedto getEmployeeById(int employeeID) throws EmployeeDaoException,	EmployeeNotFoundException {
 		Connection dbConnect=ConnectionUtil.ConnectionCreate();
 		ResultSet resultSet=null;
 		Employeedto dto1 = null;
 		PreparedStatement preparedStatement=null;
 		try {
 			preparedStatement=dbConnect.prepareStatement(sqlConstants.fetchDataById());
-			preparedStatement.setInt(1, empId);
+			preparedStatement.setInt(1, employeeID);
 			resultSet=preparedStatement.executeQuery();
 		
 			if (resultSet.next()) {
@@ -95,18 +94,19 @@ public class EmployeeDAO {
 	                resultSet.getString("joining_date"),
 	                resultSet.getInt("active_status"));
 	            }
+			else {
+				throw new EmployeeNotFoundException("Employee with ID " + employeeID + " not found");
+			}
 			
 		}
 		catch(SQLException sqlException) {
-			sqlException.printStackTrace();
-		}
-		catch (Exception exc) {
-			exc.printStackTrace();
+			throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
 		}
 		finally {
 			try {
 				dbConnect.close();
 				preparedStatement.close();
+				resultSet.close();
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -115,22 +115,24 @@ public class EmployeeDAO {
 		return dto1;
 	}
 	
-	public int deleteEmployee(int empId){
+	public int deleteEmployee(int employeeID)throws EmployeeDaoException,	EmployeeNotFoundException{
 		Connection dbconnect=null;
 		int rowsDeleted=0;
 		PreparedStatement st=null;
 		try {
 			dbconnect=ConnectionUtil.ConnectionCreate();
 			st=dbconnect.prepareStatement("Delete from employee where id=?");
-			st.setInt(1, empId);
+			st.setInt(1, employeeID);
 			rowsDeleted=st.executeUpdate();
-		}
-		catch(SQLException sqlException) {
-			sqlException.printStackTrace();
-		}
-		catch (Exception exc) {
-			exc.printStackTrace();
-			
+			if (rowsDeleted==0) {
+				throw new EmployeeNotFoundException("No employee with employee id: "+employeeID);
+			}
+			else {
+
+				return rowsDeleted;
+			}
+		}catch(SQLException sqlException) {
+			throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
 		}
 		finally {
 			try {
@@ -140,10 +142,9 @@ public class EmployeeDAO {
 				e.printStackTrace();
 			}
 		}
-		return rowsDeleted;
 	}
 	
-	public boolean updateEmployee(Employeedto employeeDTO)  {
+	public boolean updateEmployee(Employeedto employeeDTO) throws EmployeeDaoException,	EmployeeNotFoundException {
 	    Connection dbConnect = null;
 	    boolean rowsUpdated = false;
 	    PreparedStatement statement=null;
@@ -163,10 +164,16 @@ public class EmployeeDAO {
 	        statement.setInt(7, employeeDTO.employeeId);
 
 	        rowsUpdated = (statement.executeUpdate() > 0);
+	        if (rowsUpdated==false) {
+	        	throw new EmployeeNotFoundException("No employee with employee id: "+employeeDTO.employeeId);
+	        }
+	        else {
+	        	return rowsUpdated;
+	        }
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+	    } catch(SQLException sqlException) {
+			throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
+		}
 	    finally {
 	    	try {
 				dbConnect.close();
@@ -178,7 +185,6 @@ public class EmployeeDAO {
 	    	
 	    }
 
-	    return rowsUpdated;
 	}
 
 

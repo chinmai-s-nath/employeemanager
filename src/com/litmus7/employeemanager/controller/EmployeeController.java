@@ -3,9 +3,11 @@ package com.litmus7.employeemanager.controller;
 import com.litmus7.employeemanager.constants.sqlConstants;
 import com.litmus7.employeemanager.dto.Employeedto;
 import com.litmus7.employeemanager.util.Response;
+import com.litmus7.employeemanager.util.ResponseDTO;
 import com.litmus7.employeemanager.util.Validation;
 import com.litmus7.employeemanager.util.textUtil;
 import com.litmus7.employeemanager.services.*;
+import com.litmus7.employeemanager.exception.*;
 import java.util.*;
 
 public class EmployeeController {
@@ -53,58 +55,95 @@ public class EmployeeController {
 		}
 	}
 	
-	public String createEmployeeController(Employeedto employeeDataTransfer) { 
-		
+	public ResponseDTO createEmployeeController(Employeedto employeeDataTransfer) { 
+
 		if (valid.checkStringEmpty(employeeDataTransfer.fname)==true && valid.checkStringEmpty(employeeDataTransfer.phone)==true && valid.checkStringEmpty(employeeDataTransfer.email)==true  &&valid.checkEmail(employeeDataTransfer.email)==true && valid.checkPhoneNumber(employeeDataTransfer.phone)==true )
 		{
+		try {
 			boolean result=Services.createEmployeeServices(employeeDataTransfer);
-			return response.sqlBooleanResponse(result);
+			 return new ResponseDTO(result, "Employee Created with id: "+employeeDataTransfer.employeeId, null, null);
+			 } 
+		catch (EmployeeNotCreated e) {
+			 return new ResponseDTO(false, e.getMessage(), null,null);
+			 }  
+		catch (EmployeeServiceException e) {
+			 return new ResponseDTO(false, "Service Error: " + e.getMessage(), null,null);
+			 } 
+		catch (Exception e) {
+			 return new ResponseDTO(false, "System error: " + e.getMessage(), null,null);
+			 }
 		}
-		
 		else {
-			
-			return response.dataMismatch();
+			return new ResponseDTO(false, "Invalid information", null,null);
 		}
 	}
 	
-	public List<String> getAllEmployeeController(){
-		List<String>result=new ArrayList<>();
-		
-		if (Services.getAllEmployeeServices()!=null) {
-			return Services.getAllEmployeeServices();
-		}
-		else {
-			 result.add("No item found");
-		}
-		
-		return result;
-	}
-	
-	public String getEmployeeByIdController(int employeeId) {
-		
-		Employeedto employeeDTO= Services.getEmployeeByIdServices(employeeId);
-		if (employeeDTO!=null) {
-			return employeeDTO.EmployeeDTODisplay();
-		}
-		else {
-			return sqlConstants.itemNotFound();
-		}
-		
-	}
-	public String deleteEmployeeController(int employeeId) {
+	public ResponseDTO getAllEmployeeController(){
 	
 		try {
-			return response.intResponse(Services.deleteEmployeeServices(employeeId));
-		} catch (Exception e) {
-			return sqlConstants.itemNotFound();
-		}
+			 List<String> employees = Services.getAllEmployeeServices();
+			 return new ResponseDTO(true, "Employee found", null, employees);
+			 } 
+		catch (EmployeeNotFoundException e) {
+			 return new ResponseDTO(false, e.getMessage(), null,null);
+			 } 
+		catch (EmployeeServiceException e) {
+			 return new ResponseDTO(false, "Service Error: " + e.getMessage(), null,null);
+			 } 
+		catch (Exception e) {
+			 return new ResponseDTO(false, "System error: " + e.getMessage(), null,null);
+			 }
+		
+	}
+
+	
+	public ResponseDTO getEmployeeByIdController(int employeeId) {
+		
+		try {
+			 Employeedto employee = Services.getEmployeeByIdServices(employeeId);
+			 return new ResponseDTO(true, "Employee found", employee,null);
+			 } 
+		catch (EmployeeNotFoundException e) {
+			 return new ResponseDTO(false, e.getMessage(), null,null);
+			 } 
+		catch (EmployeeServiceException e) {
+			 return new ResponseDTO(false, "Service Error: " + e.getMessage(), null,null);
+			 } 
+		catch (Exception e) {
+			 return new ResponseDTO(false, "System error: " + e.getMessage(), null,null);
+			 }
+		
+	}
+	public ResponseDTO deleteEmployeeController(int employeeId) {
+	
+		try {
+			 int data =Services.deleteEmployeeServices(employeeId);
+			 return new ResponseDTO(true, "Employees deleted: "+data, null,null);
+			 } 
+		catch (EmployeeNotFoundException e) {
+			 return new ResponseDTO(false, e.getMessage(), null,null);
+			 } 
+		catch (EmployeeServiceException e) {
+			 return new ResponseDTO(false, "Service Error: " + e.getMessage(), null,null);
+			 } 
+		catch (Exception e) {
+			 return new ResponseDTO(false, "System error: " + e.getMessage(), null,null);
+			 }
 	}
 	
-	public String updateEmployeeController(Employeedto employee) {
+	public ResponseDTO updateEmployeeController(Employeedto employee) {
 		try {
-			return response.booleanResponse(Services.updateEmployeeServices(employee));
-		} catch (Exception e) {
-			return sqlConstants.errorCode();
-		}
+			 boolean data =Services.updateEmployeeServices(employee);
+			 return new ResponseDTO(data, "Employee details updated of id: "+employee.employeeId, null,null);
+			 } 
+		catch (EmployeeNotFoundException e) {
+			 return new ResponseDTO(false, e.getMessage(), null,null);
+			 } 
+		catch (EmployeeServiceException e) {
+			 return new ResponseDTO(false, "Service Error: " + e.getMessage(), null,null);
+			 } 
+		catch (Exception e) {
+			 return new ResponseDTO(false, "System error: " + e.getMessage(), null,null);
+			 }
 	}
 }

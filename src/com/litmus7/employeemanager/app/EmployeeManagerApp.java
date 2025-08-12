@@ -10,6 +10,7 @@ public class EmployeeManagerApp {
 	
 	private static final String INPUT_FILE ="E:\\Eclipse workspace\\employeemanager\\employees.txt";
 	private static final String OUTPUT_FILE="employee.csv";
+	private static ResponseDTO response=null;
 	public static void main(String[] args) {
 		
 	    EmployeeController employeeController=new EmployeeController(INPUT_FILE, OUTPUT_FILE);
@@ -105,28 +106,24 @@ public class EmployeeManagerApp {
 				
 				System.out.println("Active (1/0): ");
 				 active=sc.nextInt();
-				
-//				if (valid.checkStringEmpty(firstName)==true && valid.checkStringEmpty(phoneNumber)==true && valid.checkStringEmpty(emailAddress)==true  &&valid.checkEmail(emailAddress)==true && valid.checkPhoneNumber(phoneNumber)==true)
-//				{
-//					employeeDTO=new Employeedto(id,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
-//					data=employeeController.createEmployeeController(employeeDTO);
-//				}
-//			
-//				else {
-//					System.out.println("Enter a valid data\n");
-//				}
-				 
+
 				employeeDTO=new Employeedto(employeeID,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
-				data=employeeController.createEmployeeController(employeeDTO);
-				
-				System.out.println(data);
+				response=employeeController.createEmployeeController(employeeDTO);
+				if (response.isSuccess()) {
+					System.out.println(response.getMessage());
+				}
+				else {
+					System.out.println(response.getMessage()+" :"+response.getData());
+				}
 				break;
 			case 5:
 				//employeeController.getAllEmployeeController();
-				List<String> employees = employeeController.getAllEmployeeController();
-
-				for (String employee : employees) {
-				    System.out.println(employee);
+				response = employeeController.getAllEmployeeController();
+				if (response.isSuccess()) {
+					List<String> list=response.getList();
+					for (String employee : list) {
+					    System.out.println(employee);
+					}
 				}
 				System.out.println();
 				break;
@@ -134,21 +131,27 @@ public class EmployeeManagerApp {
 			case 6:
 				System.out.println("Enter id to search: ");
 				int cho=sc.nextInt();
-				data=employeeController.getEmployeeByIdController(cho);
-//				if(employeeController.getEmployeeByIdController(cho)!=null) {
-//					System.out.println(employeeDTO.employeeId+" , "+employeeDTO.fname+" , "+employeeDTO.lname+" , "+employeeDTO.phone+" , "+employeeDTO.email+" , "+employeeDTO.doj+" , "+employeeDTO.active);
-//					System.out.println();
-//				}
-//				else {
-//					System.out.println("No item found");
-//				}
+				response=employeeController.getEmployeeByIdController(cho);
+				
+				if (response.isSuccess()) {
+					 Employeedto emp = response.getData();
+					 System.out.println("Employee Found: " + emp.fname + ", joining date: " +emp.doj);
+					 } else {
+					 System.out.println("Error: " + response.getMessage());
+					 }
+				
 				System.out.println(data);
 				break;
 			case 7:
 				System.out.println("Enter id to search: ");
 				employeeID=sc.nextInt();
-				data=employeeController.deleteEmployeeController(employeeID);
-				System.out.println(data);
+				response=employeeController.deleteEmployeeController(employeeID);
+				if(response.isSuccess()) {
+					System.out.println(response.getMessage());
+				}
+				else {
+					System.out.println(response.getMessage());
+				}
 				break;
  			case 8:
  			
@@ -177,12 +180,19 @@ public class EmployeeManagerApp {
 				{
 					employeeDTO=new Employeedto(employeeID,firstName,lastName,phoneNumber,emailAddress,dateOfJoining,active);
 					
-					data=employeeController.updateEmployeeController(employeeDTO);
+					response=employeeController.updateEmployeeController(employeeDTO);
 					System.out.println(data);
 				} 
 			
 				else {
 					System.out.println("Enter a valid data\n");
+				}
+				
+				if (response.isSuccess()) {
+					System.out.println(response.getMessage());
+				}
+				else {
+					System.out.println(response.getMessage());
 				}
 				break;
 			default:

@@ -10,6 +10,10 @@ public class Employeedto {
 	public int active;
 	
 
+	public Employeedto() {
+		
+	}
+	
 	public Employeedto(int id2,String fname,String lname,String phone,String email,String doj, int active1){	
 		
 		this.employeeId=id2;
