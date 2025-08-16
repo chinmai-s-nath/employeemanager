@@ -30,13 +30,10 @@ public class sqlConstants {
 		return "id";
 	}
 	public static String successCode() {
-		return "Success";
+		return "200";
 	}
 	public static String dbConnectionErrorCode() {
 		return "503";   //service unavailable
-	}
-	public static String itemNotFound() {
-		return "404 Item not Found";
 	}
 	
 	public static String fetchDataById() {
@@ -45,6 +42,12 @@ public class sqlConstants {
 	
 	public static String errorCode(){
 		return "Error_code";
+	}
+	public static String ItemNotFound() {
+		return "404 : Item Not Found";
+	}
+	public static String BadRequest() {
+		return "400";
 	}
 }
 

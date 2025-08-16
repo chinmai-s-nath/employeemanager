@@ -2,6 +2,10 @@ package com.litmus7.employeemanager.dao;
 
 import java.sql.*;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.*;
 import java.sql.SQLException;
 import com.litmus7.employeemanager.dto.*;
@@ -11,8 +15,9 @@ import com.litmus7.employeemanager.exception.*;
 
 public class EmployeeDAO {
 	
-	
 	ConnectionUtil  connection=new ConnectionUtil();
+	private static final Logger logger=LogManager.getLogger(EmployeeDAO.class);
+	
 	public boolean createEmployee(Employeedto employeeController) {	
 		Connection dbconnect=null;
 		PreparedStatement preparedstatement=null;
@@ -26,10 +31,17 @@ public class EmployeeDAO {
 			preparedstatement.setString(5, employeeController.email);
 			preparedstatement.setString(6, employeeController.doj);
 			preparedstatement.setInt(7, employeeController.active);
+			logger.info("Succefully executed the query. . .");
 			preparedstatement.execute(); 
+//			if (connection==null) {
+//				logger.error("No database connection. . .");
+//				throw new EmployeeDatabaseException("Database connection error. . .");
+//				
+//			}
 			return true;
 		}
 		catch(Exception e) {
+			logger.error("EmployeeDAO: Error while creating new employee");
 			return false;
 		}
 		
@@ -62,9 +74,13 @@ public class EmployeeDAO {
 	                         resultSet.getBoolean("active_status");
 	            result.add(row);
 	        }
+			logger.info("Succefully executed the query. . .");
+			if (connection==null) {
+				throw new EmployeeDatabaseException("Database connection error. . .");
+			}
 		}
 			catch(Exception e) {
-				
+				logger.error("EmployeeDAO: Error while fetaching employee data");
 			}
 		finally {
 			try {
@@ -98,15 +114,18 @@ public class EmployeeDAO {
 	                resultSet.getString("email_address"),
 	                resultSet.getString("joining_date"),
 	                resultSet.getInt("active_status"));
+				logger.info("Succefully executed the query. . .");
 	            }
 			else {
-			
+				logger.error("EmployeeDAO: Error while fetaching employee data");
 				throw new EmployeeNotFoundException("Employee with ID " + employeeID + " not found");
 			}
-			
+			if (connection==null) {
+				throw new EmployeeDatabaseException("Database connection error. . .");
+			}
 		}
 		catch(Exception sqlException) {
-			
+			logger.error("EmployeeDAO: Exception occured");
 		}
 		finally {
 			try {
@@ -121,7 +140,7 @@ public class EmployeeDAO {
 		return employeeDTO;
 	}
 	
-	public int deleteEmployee(int employeeID) {
+	public int deleteEmployee(int employeeID) throws EmployeeDatabaseException {
 		Connection dbconnect=null;
 		int rowsDeleted=-1;
 		PreparedStatement st=null;
@@ -130,10 +149,14 @@ public class EmployeeDAO {
 			st=dbconnect.prepareStatement("Delete from employee where id=?");
 			st.setInt(1, employeeID);
 			rowsDeleted=st.executeUpdate();
-		
+			logger.info("Succefully executed the query. . .");
+			
 		}
 		catch(Exception e) {
-
+			if (dbconnect==null) {
+				throw new EmployeeDatabaseException("Database connection error. . .");
+			}
+			logger.error("EmployeeDAO: Exception occured");
 		}
 		finally {
 			try {
@@ -167,8 +190,12 @@ public class EmployeeDAO {
 	        statement.setInt(7, employeeDTO.employeeId);
 
 	        rowsUpdated = (statement.executeUpdate() > 0);
-	        
+	        logger.info("Succefully executed the query. . .");
+	        if (connection==null) {
+				throw new EmployeeDatabaseException("Database connection error. . .");
+			}
 	    } catch(Exception sqlException) {
+	    	logger.error("EmployeeDAO: Exception occured");
 			//throw new EmployeeDaoException("Database error while fetching employee.",sqlException);
 		}
 	    finally {

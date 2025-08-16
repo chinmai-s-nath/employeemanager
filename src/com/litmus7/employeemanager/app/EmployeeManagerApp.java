@@ -6,8 +6,13 @@ import com.litmus7.employeemanager.util.*;
 import java.util.Scanner;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class EmployeeManagerApp {
 	
+	private static final Logger logger=LogManager.getLogger(EmployeeManagerApp.class);
 	private static final String INPUT_FILE ="E:\\Eclipse workspace\\employeemanager\\employees.txt";
 	private static final String OUTPUT_FILE="employee.csv";
 	private static ResponseDTO response=null;
@@ -31,6 +36,7 @@ public class EmployeeManagerApp {
 		Scanner sc=new Scanner(System.in);
 				
 		do {	
+			
 			System.out.println("1. Employee Data Ingestion & Console Display\n2. Data Transformation & CSV Export \n3. Interactive Data Entry & Appending\n4. Create Employee\n5.Get all employee data\n6.Get employee data by id\n7.Delete employee\n8. Update employee\n\n Enter your choice: ");
 			
 			choice=sc.nextInt();
@@ -79,6 +85,7 @@ public class EmployeeManagerApp {
 				}
 				 
 				else {
+					logger.error("Invalid information by the user");
 					System.out.println("Enter a valid data\n");
 				}
 				break;
@@ -111,8 +118,10 @@ public class EmployeeManagerApp {
 				response=employeeController.createEmployeeController(employeeDTO);
 				if (response.isSuccess()) {
 					System.out.println(response.getMessage());
+				
 				}
 				else {
+					
 					System.out.println(response.getMessage()+" :"+response.getData());
 				}
 				break;
@@ -137,9 +146,13 @@ public class EmployeeManagerApp {
 				response=employeeController.getEmployeeByIdController(cho);
 				
 				if (response.isSuccess()) {
-					 Employeedto emp = response.getData();
-					 System.out.println("Employee Found: " + emp.fname + ", joining date: " +emp.doj);
-					 } else {
+					 employeeDTO = response.getData();
+					 System.out.println("Employee Found: " + employeeDTO.fname + ", joining date: " +employeeDTO.doj);
+
+						logger.info("Employee found successfully with employee id: "+employeeDTO.employeeId);
+					 } 
+				
+				else {
 					 System.out.println("Error: " + response.getMessage());
 					 }
 				

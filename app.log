@@ -1,0 +1,24 @@
+11:48:51.587 [main] INFO  com.litmus7.employeemanager.app.EmployeeManagerApp - start of execution
+11:48:59.556 [main] INFO  com.litmus7.employeemanager.app.EmployeeManagerApp - start of execution
+11:55:16.088 [main] ERROR com.litmus7.employeemanager.app.EmployeeManagerApp - Invalid information by the user
+11:56:04.615 [main] ERROR com.litmus7.employeemanager.app.EmployeeManagerApp - Invalid information by the user
+12:00:03.763 [main] INFO  com.litmus7.employeemanager.controller.EmployeeController - Employee created with id5
+12:02:14.838 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Invalid information by the user
+12:03:26.163 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Service layer error
+12:15:55.320 [main] INFO  com.litmus7.employeemanager.services.services - Employee found successfully: 6
+12:15:55.709 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Employee not found with id: 6
+12:19:28.962 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Employee not found with id: 7
+12:19:44.663 [main] INFO  com.litmus7.employeemanager.app.EmployeeManagerApp - Employee found successfully: 5
+12:42:22.608 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Service layer error
+12:43:02.643 [main] ERROR com.litmus7.employeemanager.util.ConnectionUtil - Connection not established. . .
+12:43:02.644 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - Service layer error
+14:31:36.003 [main] ERROR com.litmus7.employeemanager.util.ConnectionUtil - 503: Connection not established. . .
+14:31:36.006 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - 400 :Service layer error
+14:35:41.967 [main] ERROR com.litmus7.employeemanager.util.ConnectionUtil - 503: Connection not established. . .
+14:35:41.969 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - 400 :Service layer error
+14:41:58.545 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - 404 : Item Not Found :Employee not found with id: 6
+14:49:19.668 [main] INFO  com.litmus7.employeemanager.dao.EmployeeDAO - Succefully executed the query. . .
+14:49:19.674 [main] INFO  com.litmus7.employeemanager.controller.EmployeeController - 200 :Retrieved employee datas
+10:58:30.824 [main] INFO  com.litmus7.employeemanager.services.services - Service layer: Entering Update Employee DAO
+10:58:31.454 [main] INFO  com.litmus7.employeemanager.dao.EmployeeDAO - Succefully executed the query. . .
+10:58:31.464 [main] ERROR com.litmus7.employeemanager.controller.EmployeeController - 404 : Item Not Found: Employee not found with id: 7

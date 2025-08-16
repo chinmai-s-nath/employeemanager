@@ -6,10 +6,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="recources"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-j-9.3.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/apache-log4j-2.12.4-bin/log4j-core-2.12.4.jar"/>
+	<classpathentry kind="lib" path="C:/apache-log4j-2.12.4-bin/log4j-api-2.12.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
